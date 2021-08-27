@@ -99,7 +99,48 @@ const listAllProduct = [
 
 class Home extends React.Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            showModal: false
+        }
+    }
 
+    setSelectItem(item, status){
+        this.setState({
+            showModal: status,
+            item: item
+        })
+    }
+
+    renderSize(items) {
+        return(
+            items.size.map((item, index) => {
+                return(
+                    <TouchableOpacity
+                        key={index}
+                        style={{
+                            width: 35,
+                            height: 25,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginHorizontal: 5,
+                            marginBottom: 10,
+                            borderWidth: 1,
+                            borderColor: COLORS.white,
+                            borderRadius: 5
+                        }}
+                    >
+                        <Text style={{
+                            color: COLORS.white
+                        }}>
+                            {item}
+                        </Text>
+                    </TouchableOpacity>
+                )
+            })
+        )
+    }
 
     renderListSaleTop(item, index) {
 
@@ -115,6 +156,9 @@ class Home extends React.Component {
                     width: 180,
                     justifyContent: 'center',
                     marginHorizontal: SIZES.base 
+                 }}
+                 onPress={() => {
+                     this.setSelectItem(item, true)
                  }}
             >
                 <Text style={{ color: COLORS.gray, ...FONTS.h5, ...trendingStyle }}>{ item.type }</Text>
@@ -177,7 +221,9 @@ class Home extends React.Component {
                 style={{
                     flex: 1,
                     flexDirection: 'row',
-                    
+                }}
+                onPress={() => {
+                    this.setSelectItem(item, true)
                 }}
             >
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -267,6 +313,145 @@ class Home extends React.Component {
 
                 </View>
             </View>
+
+                
+            {/* Modal */}
+            { this.state.item &&
+            <Modal
+                animationType='slide'
+                transparent={true}
+                visible={this.state.showModal}
+            >
+                <BlurView
+                    blurType='light'
+                    blurAmount={20}
+                    reducedTransparencyFallbackColor='white'
+                    style={{ 
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                     }}
+                >
+                    {/* Close modal */}
+                    <TouchableOpacity 
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+                         }}
+                         onPress={() => {
+                             this.setSelectItem(this.state.item, false)
+                         }}
+                    >
+                    </TouchableOpacity>
+                
+                {/* Modal content */}
+                <View style={{
+                    backgroundColor: this.state.item.bgColor,
+                    justifyContent: 'center',
+                    width: '85%'
+                }}>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: -SIZES.padding*2
+                    }}>
+                         <Image
+                            source={this.state.item.image}
+                            resizeMode="contain"
+                            style={{
+                                width: '90%',
+                                height: 170,
+                                transform: [
+                                    {
+                                        rotate: '-15deg'
+                                    }
+                                ]
+                            }}
+                         />
+                    </View>
+
+                        <Text style={{
+                            marginTop: SIZES.padding,
+                            marginHorizontal: SIZES.padding,
+                            color: COLORS.white,
+                            ...FONTS.body2
+                        }}>
+                        {this.state.item.name}
+                        </Text>
+
+                        <Text style={{
+                            marginTop: SIZES.base/2,
+                            marginHorizontal: SIZES.padding,
+                            color: COLORS.white,
+                            ...FONTS.body3
+                        }}>
+                        {this.state.item.type}
+                        </Text>
+
+                        <Text style={{
+                            marginTop: SIZES.radius,
+                            marginHorizontal: SIZES.padding,
+                            color: COLORS.white,
+                            ...FONTS.h1
+                        }}>
+                        {this.state.item.price}
+                        </Text>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            marginTop: SIZES.radius,
+                            marginHorizontal: SIZES.padding,
+
+                        }}>
+                            <View>
+                                <Text style={{
+                                    color: COLORS.white,
+                                    ...FONTS.body3
+                                }}>Select Type</Text>
+                            </View>
+
+                            <View style={{
+                                flex: 1,
+                                flexWrap: 'wrap',
+                                flexDirection: 'row',
+                                 marginLeft: SIZES.radius,
+                            }}>
+                                {this.renderSize(this.state.item)}
+                            </View>
+                        </View>
+
+                            <TouchableOpacity style={{
+                                width: '100%',
+                                height: 70,
+                                marginTop: SIZES.base,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'rgba(0,0,0,0.5)',
+                            }}
+                            onPress={() => {
+                                this.setSelectItem(null, false)
+                            }}
+                            >
+                                <Text style={{
+                                    color: COLORS.white,
+                                    ...FONTS.largeTitleBold
+                                }}>
+                                    And To Cart
+                                </Text>
+                            </TouchableOpacity>
+                       
+
+                </View>
+
+
+                </BlurView>
+            </Modal>
+       }
+
+
 
             </View>
            )
